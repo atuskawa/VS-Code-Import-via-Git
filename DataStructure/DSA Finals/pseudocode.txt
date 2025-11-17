@@ -1,0 +1,119 @@
+#Code is working fine, dont f*cking change it till i say so :)
+#Adding player is complete
+#Removing player by name is complete
+#Displaying players is complete
+#rotate and skip is not implemented yet
+
+#yatco (group leader): incharge of Adding players, Displaying Players code, and adding a profanity filter for the names.
+#bautista: incharge of Removing Players, Rotate Players, uno game code
+#romero: incharge of Skipping Players (reverse logic) uno game code
+
+START
+CLASS Player
+    String name
+    Player next
+    Player prev 
+----------------------------------------------------------------------------------------------------
+CLASS UNOGame
+    Player head = null
+    Player current_player = null
+    BOOLEAN direction = true
+----------------------------------------------------------------------------------------------------
+    FUNCTION add_player()
+        PRINT "Enter your Name here:"
+        INPUT name
+        new_player = Player(name)
+
+        IF head == null THEN
+            head = new_player
+            new_player.next = new_player            #the loop       
+        ELSE
+            tail = head.prev
+            tail.next = new_player
+            new_player.next = head
+        ENDIF
+    END FUNCTION
+----------------------------------------------------------------------------------------------------
+FUNCTION remove_player()
+    PRINT "Enter the Name you want to remove: "
+    INPUT name 
+
+    IF head == null THEN
+        PRINT "no players to remove"
+        RETURN
+    ENDIF
+
+temp = head
+DO
+    IF temp.name == name THEN
+        IF temp == head AND temp.next == head THEN
+            head = null
+            current_player = null
+        ELSE
+            temp.prev.next = temp.next
+
+            IF temp == head THEN
+                head = temp.next
+            ENDIF
+
+            IF temp == current_player THEN
+                current_player = temp.next
+            ENDIF
+        ENDIF
+        DELETE temp
+        RETURN
+    ENDIF
+    temp = temp.next
+WHILE temp != head
+
+PRINT "I don't see a player of that name in my system"
+END FUNCTION
+----------------------------------------------------------------------------------------------------
+FUNCTION rotate_turn()
+    IF current_player == null THEN
+        PRINT "there's currently no players right now."
+        RETURN
+    ENDIF
+
+    IF direction == true THEN
+        current_player = current_player.next
+    ELSE
+        current_player = current_player.prev 
+    ENDIF
+END FUNCTION
+----------------------------------------------------------------------------------------------------
+FUNCTION skip_turn()
+    rotate_turn()
+    rotate_turn()
+END FUNCTION
+----------------------------------------------------------------------------------------------------
+FUNCTION reverse_turn()
+    direction = NOT direction
+END FUNCTION
+----------------------------------------------------------------------------------------------------
+FUNCTION display_players()
+    IF head == null THEN
+        PRINT "I dont see any players playing right now."
+        RETURN
+    ENDIF
+
+    temp = head
+    DO
+      PRINT temp.name
+      temp = temp.next
+    WHILE temp != head
+END FUNCTION
+
+what we added into the code:
+*Name Filter
+*sleep after filter trigger
+
+
+progress june 10 2025
+-started the uno code shit
+-needs work
+-it's semi functional
+
+progress on june 11 2025 
+-debugging showed that reverse and skip dont work
+-will implement fixes on that soon

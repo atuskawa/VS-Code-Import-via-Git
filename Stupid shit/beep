@@ -1,0 +1,9 @@
+import winsound
+import time
+
+duration = 5  # seconds
+end_time = time.time() + duration
+
+while time.time() < end_time:
+    winsound.Beep(853, 20)   # 20ms beep
+    winsound.Beep(960, 20)   # 20ms beep

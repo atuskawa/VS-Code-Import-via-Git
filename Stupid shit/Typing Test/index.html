@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Typing Test</title>
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --text: #e0e0e0;
+      --accent: #333;
+      --input-bg: #1a1a1a;
+      --correct: #fff;
+      --incorrect: #ff4b4b;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+
+    .container {
+      text-align: center;
+      width: 600px;
+      max-width: 95%;
+      position: relative;
+    }
+
+    h1 { margin-bottom: 20px; font-weight: 600; }
+
+    .word-selector {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    .word-btn {
+      background: var(--accent);
+      border: none;
+      color: var(--text);
+      padding: 8px 15px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    .word-btn:hover { background: #444; }
+    .word-btn.active { background: #666; }
+
+    #quote {
+      margin-bottom: 20px;
+      font-size: 20px;
+      line-height: 1.6;
+      color: #999;
+      user-select: none;
+    }
+
+    #quote span.correct { color: var(--correct); }
+    #quote span.incorrect { color: var(--incorrect); }
+
+    .caret { border-left: 2px solid #fff; animation: blink 1s step-start infinite; margin-left: -1px; }
+    @keyframes blink { 50% { border-color: transparent; } }
+
+    textarea {
+      width: 100%;
+      height: 100px;
+      background: var(--input-bg);
+      border: none;
+      color: var(--text);
+      font-size: 18px;
+      padding: 10px;
+      resize: none;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    textarea:focus { outline: none; border: 1px solid var(--accent); }
+
+    .stats { margin-top: 10px; display: flex; justify-content: space-around; }
+
+    button#restart {
+      background: var(--accent);
+      color: var(--text);
+      border: none;
+      padding: 8px 20px;
+      cursor: pointer;
+      margin-top: 25px;
+      border-radius: 4px;
+      transition: 0.2s;
+      position: relative;
+      z-index: 2;
+    }
+    button#restart:hover { background: #444; }
+
+    .theme-container {
+      position: absolute;
+      bottom: -70px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 1;
+    }
+
+    .change-theme {
+      color: #777;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: underline;
+      transition: 0.2s;
+      display: inline-block;
+      margin-top: 10px;
+    }
+    .change-theme:hover { color: #fff; }
+
+    .theme-menu { display: none; flex-direction: row; justify-content: center; gap: 10px; margin-top: 10px; }
+    .theme-menu.show { display: flex; }
+
+    .theme-btn {
+      background: var(--accent);
+      border: none;
+      color: var(--text);
+      padding: 5px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+    .theme-btn:hover { background: #444; }
+    .theme-btn.active { background: #666; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Typing Test</h1>
+
+    <div class="word-selector">
+      <button class="word-btn active" data-words="10">10</button>
+      <button class="word-btn" data-words="20">20</button>
+      <button class="word-btn" data-words="30">30</button>
+      <button class="word-btn" data-words="40">40</button>
+      <button class="word-btn" data-words="50">50</button>
+    </div>
+
+    <div id="quote"></div>
+    <textarea id="input" placeholder="Start typing..."></textarea>
+
+    <div class="stats">
+      <span id="timer">0s</span>
+      <span id="wpm">0 WPM</span>
+      <span id="accuracy">0%</span>
+    </div>
+
+    <button id="restart">Restart</button>
+
+    <div class="theme-container">
+      <div class="change-theme" id="changeTheme">Change Theme</div>
+      <div class="theme-menu" id="themeMenu">
+        <button class="theme-btn active" data-theme="dark">Dark</button>
+        <button class="theme-btn" data-theme="light">Light</button>
+        <button class="theme-btn" data-theme="matrix">Matrix</button>
+        <button class="theme-btn" data-theme="pastel">Pastel</button>
+        <button class="theme-btn" data-theme="modern-dolch">Modern Dolch</button>
+        <button class="theme-btn" data-theme="honor">Honor</button>
+        <button class="theme-btn" data-theme="red-samurai">Red Samurai</button>
+        <button class="theme-btn" data-theme="rudy">Rudy</button>
+        <button class="theme-btn" data-theme="9009">9009</button>
+        <button class="theme-btn" data-theme="olivia">Olivia</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const wordList = ["the","and","you","that","was","for","are","with","have","this","not","but","had","they","what","from","she","him","all","there","when","out","can","your","just","like","time","know","take","people","into","year","good","some","could","them","see","other","than","then","now","look","only","come","its","over","think","also","back","after","use","two","how","our","work","first","well","way","even","new","want","because","any","these","give","day","most","us","make","life","man","go","get","say","one","about","who","will","more","if","no","up","so","do","at","on","it","in","is","he","be","to","of","a","as","by","we","or","me","my","her","his","our","their","your","them","those","these","that","this","here","there","where","why","how"];
+
+    const quoteDisplay = document.getElementById("quote");
+    const input = document.getElementById("input");
+    const timerDisplay = document.getElementById("timer");
+    const wpmDisplay = document.getElementById("wpm");
+    const accuracyDisplay = document.getElementById("accuracy");
+    const restartBtn = document.getElementById("restart");
+    const wordBtns = document.querySelectorAll(".word-btn");
+
+    let startTime, timer, currentWords, wordIndex = 0;
+    let wordCount = 10;
+
+    function newQuote() {
+      currentWords = [];
+      for (let i = 0; i < wordCount; i++) {
+        currentWords.push(wordList[Math.floor(Math.random() * wordList.length)]);
+      }
+      wordIndex = 0;
+      renderWords();
+      input.value = "";
+      clearInterval(timer);
+      timerDisplay.textContent = "0s";
+      wpmDisplay.textContent = "0 WPM";
+      accuracyDisplay.textContent = "100%";
+      startTime = null;
+      input.disabled = false;
+      input.focus();
+    }
+
+    function renderWords() {
+      quoteDisplay.innerHTML = "";
+      currentWords.forEach((word, i) => {
+        const span = document.createElement("span");
+        span.innerText = word + (i < currentWords.length - 1 ? " " : "");
+        if (i < wordIndex) span.style.opacity = "0.2";
+        quoteDisplay.appendChild(span);
+      });
+      updateCaret();
+    }
+
+    function updateCaret() {
+      const spans = quoteDisplay.querySelectorAll("span");
+      spans.forEach(s => s.innerHTML = s.innerText);
+      spans.forEach(s => s.classList.remove("caret"));
+
+      const currentWordSpan = spans[wordIndex];
+      if (!currentWordSpan) return;
+
+      const typedLength = input.value.length;
+      const word = currentWords[wordIndex];
+      currentWordSpan.innerHTML = "";
+      word.split("").forEach((char, i) => {
+        const charSpan = document.createElement("span");
+        charSpan.innerText = char;
+        if (i === typedLength) charSpan.classList.add("caret");
+        currentWordSpan.appendChild(charSpan);
+      });
+      if (wordIndex < currentWords.length - 1) currentWordSpan.appendChild(document.createTextNode(" "));
+    }
+
+    input.addEventListener("input", () => {
+      if (!startTime) {
+        startTime = new Date();
+        timer = setInterval(updateTimer, 1000);
+      }
+
+      const typed = input.value;
+      const currentWord = currentWords[wordIndex];
+
+      let correctChars = 0;
+      for (let i = 0; i < typed.length; i++) if (typed[i] === currentWord[i]) correctChars++;
+      const accuracy = typed.length ? ((correctChars / typed.length) * 100).toFixed(0) : 100;
+      accuracyDisplay.textContent = accuracy + "%";
+
+      updateCaret();
+
+      if (typed.endsWith(" ")) {
+        if (typed.trim() === currentWord) {
+          wordIndex++;
+          input.value = "";
+          renderWords();
+          if (wordIndex === currentWords.length) {
+            clearInterval(timer);
+            calculateWPM();
+            input.disabled = true;
+          }
+        }
+      }
+    });
+
+    function updateTimer() {
+      const seconds = Math.floor((new Date() - startTime) / 1000);
+      timerDisplay.textContent = seconds + "s";
+    }
+
+    function calculateWPM() {
+      const timeTaken = ((new Date() - startTime) / 1000) / 60;
+      const wpm = Math.round(wordIndex / (timeTaken || 1 / 60));
+      wpmDisplay.textContent = wpm + " WPM";
+    }
+
+    restartBtn.addEventListener("click", newQuote);
+
+    wordBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        wordBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        wordCount = parseInt(btn.dataset.words);
+        newQuote();
+      });
+    });
+
+    const themes = {
+      dark: { "--bg": "#0f0f0f","--text": "#e0e0e0","--accent": "#333","--input-bg": "#1a1a1a","--correct": "#fff","--incorrect": "#ff4b4b" },
+      light: { "--bg": "#f8f8f8","--text": "#111","--accent": "#ddd","--input-bg": "#fff","--correct": "#000","--incorrect": "#e63946" },
+      matrix: { "--bg": "#000","--text": "#00ff00","--accent": "#003300","--input-bg": "#001a00","--correct": "#00ff00","--incorrect": "#ff0000" },
+      pastel: { "--bg": "#ffeaf2","--text": "#3a3a3a","--accent": "#ffc1cc","--input-bg": "#fff5f7","--correct": "#000","--incorrect": "#e63946" },
+      "modern-dolch": { "--bg": "#d0cdc7","--text": "#1c1c1c","--accent": "#8c8c8c","--input-bg": "#ffffff","--correct": "#1c1c1c","--incorrect": "#b33a3a" },
+      honor: { "--bg": "#1f1f2e","--text": "#f0f0f0","--accent": "#444466","--input-bg": "#2a2a40","--correct": "#f0f0f0","--incorrect": "#ff4b4b" },
+      "red-samurai": { "--bg": "#1a0000","--text": "#ffcccc","--accent": "#660000","--input-bg": "#330000","--correct": "#ffcccc","--incorrect": "#ff3333" },
+      rudy: { "--bg": "#2b1b17","--text": "#e6d5b8","--accent": "#5a3c30","--input-bg": "#3d2c25","--correct": "#e6d5b8","--incorrect": "#ff6666" },
+      "9009": { "--bg": "#090909","--text": "#f5f5f5","--accent": "#333333","--input-bg": "#1a1a1a","--correct": "#f5f5f5","--incorrect": "#ff5555" },
+      olivia: { "--bg": "#f4ebe6","--text": "#3d3c3c","--accent": "#d4b9a6","--input-bg": "#fff8f4","--correct": "#3d3c3c","--incorrect": "#ff4b4b" }
+    };
+
+    const changeTheme = document.getElementById("changeTheme");
+    const themeMenu = document.getElementById("themeMenu");
+    const themeBtns = document.querySelectorAll(".theme-btn");
+
+    changeTheme.addEventListener("click", () => themeMenu.classList.toggle("show"));
+
+    themeBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        themeBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const selected = btn.dataset.theme;
+        Object.entries(themes[selected]).forEach(([key, value]) => {
+          document.documentElement.style.setProperty(key, value);
+        });
+      });
+    });
+
+    newQuote();
+  </script>
+</body>
+</html>
