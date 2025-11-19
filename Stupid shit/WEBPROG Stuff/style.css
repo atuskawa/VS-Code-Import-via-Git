@@ -1,0 +1,76 @@
+body {
+  background: #f2f2e9;
+  font-family: Helvetica;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+}
+
+.profile-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.profile-pic {
+  width: 150px;
+  height: 150px;
+  background: #ccc;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.label {
+  font-weight: bold;
+}
+
+.current-projects {
+  margin-left: auto;
+  padding: 15px;
+  border: 2px solid #555;
+  background: #fff;
+  width: 250px;
+}
+
+.repo-title {
+  margin-bottom: 10px;
+}
+
+.repo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.repo-item {
+  padding: 20px;
+  background: #fff;
+  border: 2px solid #555;
+  border-radius: 8px;
+}
+
+.add-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  background: #4caf50;
+  color: white;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.add-btn:hover {
+  background: #439b46;
+}
