@@ -74,3 +74,17 @@ body {
 .add-btn:hover {
   background: #439b46;
 }
+
+.info-box {
+  border: 2px solid #555;
+  background: #fff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  width: 100px; /* adjust this if you want wider boxes */
+}
+
+.info-box .label {
+  font-weight: bold;
+  margin-bottom: 3px;
+}
